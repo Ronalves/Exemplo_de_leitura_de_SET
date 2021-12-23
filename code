@@ -1,0 +1,25 @@
+DATA: x_tp_doc TYPE syuname,
+        x_dentro TYPE c.
+  DATA: t_set TYPE STANDARD TABLE OF rgsb4.
+
+  x_tp_doc = sy-uname.
+
+  CALL FUNCTION 'G_SET_GET_ALL_VALUES'
+    EXPORTING
+      client        = sy-mandt
+      setnr         = 'ZFI_USER_EXC_VCTO'
+      table         = 'SYST'
+      class         = '0000'
+      fieldname     = 'UNAME'
+    TABLES
+      set_values    = t_set
+    EXCEPTIONS
+      set_not_found = 1
+      OTHERS        = 2.
+
+  READ TABLE t_set TRANSPORTING NO FIELDS
+     WITH KEY from = x_tp_doc.
+  IF sy-subrc = 0.
+    x_dentro = abap_true.
+  ENDIF.
+
